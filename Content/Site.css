@@ -1,0 +1,10 @@
+﻿body {
+   padding: 0px;
+   margin: 0px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+   padding: 0px;
+   margin: 0px;
+}
