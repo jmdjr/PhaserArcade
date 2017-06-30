@@ -5,8 +5,9 @@ var States = Games.States = Games.States || {};
 var Cache = PhaserArcade.Games.Cache = PhaserArcade.Games.Cache || {};
 var Utility = PhaserArcade.Utility = PhaserArcade.Utility || {};
 
+var CacheButtons = Cache._registered_game_buttons = Cache._registered_game_buttons || [];
 
-PhaserArcade.Games.States.GameSelect = {
+States.GameSelect = {
 	loadingIcon: null,
 
 	preload: function () {
@@ -16,17 +17,24 @@ PhaserArcade.Games.States.GameSelect = {
 
 		Cache._active_play = null;
 		Cache._active_title = null;
+        
 	},
 
 	create: function () {
-		//Cache._active_play = PhaserArcade.Games.PlugGame;
-		//game.state.start('title');
 
 		var Center = {
 			x: game.world.width / 2,
 			y: game.world.height / 2
 		};
 
+        
+        for(var i = 0; CacheButtons && i < CacheButtons.length; i+=1) {
+            var button = CacheButtons[i](game);
+
+            button.x = Center.x - (button.width + 10);
+            button.y = Center.y + button.height / 2;
+        }
+        
 		var button = Utility.makeButton(game, 0, 0, 'Generic Game 1', function (button, mouse) {
 			Cache._active_play = PhaserArcade.Games.PlugGame;
 			game.state.start('title');

@@ -40,6 +40,17 @@ PhaserArcade.Games.States.Title = {
 		if (this._active_title && this._active_title.update) {
 			this._active_title.update(game);
 		}
+	},
+
+	render: function () {
+		if (this._active_title && this._active_title.render) {
+			this._active_title.render(game);
+		}
+	},
+	shutdown: function () {
+		if (this._active_title && this._active_title.shutdown) {
+			this._active_title.shutdown(game);
+		}
 	}
 };
 

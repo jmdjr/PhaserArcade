@@ -26,7 +26,18 @@ PhaserArcade.Games.States.Play = {
       if (this._active_play && this._active_play.update) {
          this._active_play.update(game);
       }
-   }
+   },
+
+	render: function () {
+		if (this._active_play && this._active_play.render) {
+			this._active_play.render(game);
+		}
+	},
+	shutdown: function () {
+		if (this._active_play && this._active_play.shutdown) {
+			this._active_play.shutdown(game);
+		}
+	}
 };
 
 window.PhaserArcade = PhaserArcade;
