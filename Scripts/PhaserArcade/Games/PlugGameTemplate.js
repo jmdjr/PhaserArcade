@@ -1,9 +1,10 @@
 // establish namespace
-var PhaserArcade = window.PhaserArcade || {};
-var Games = PhaserArcade.Games = PhaserArcade.Games || {};
-var States = Games.States = Games.States || {};
-var Cache = PhaserArcade.Games.Cache = PhaserArcade.Games.Cache || {};
-var Utility = PhaserArcade.Utility = PhaserArcade.Utility || {};
+var PA = {};
+PA.PhaserArcade = window.PhaserArcade || {};
+PA.Games = PhaserArcade.Games = PhaserArcade.Games || {};
+PA.States = Games.States = Games.States || {};
+PA.Cache = PhaserArcade.Games.Cache = PhaserArcade.Games.Cache || {};
+PA.Utility = PhaserArcade.Utility = PhaserArcade.Utility || {};
 
 var CacheButtons = Cache._registered_game_buttons = Cache._registered_game_buttons || [];
 
@@ -31,6 +32,6 @@ Games.PlugGame.LauncherButton = function(game) {
     });
 }
 
-CacheButtons.push(Games.PlugGame.LauncherButton);
+//CacheButtons.push(Games.PlugGame.LauncherButton);
 
 window.PhaserArcade = PhaserArcade;

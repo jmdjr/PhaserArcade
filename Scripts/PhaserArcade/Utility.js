@@ -7,7 +7,9 @@ var Cache = PhaserArcade.Games.Cache = PhaserArcade.Games.Cache || {};
 Games.Objects = Games.Objects || {};
 
 PhaserArcade.Utility = {
-	_Debug: false,
+	_DebugableGames:  ["PlugGame", "POT"],
+	_Debug: true,
+	_AutoGameIndex: 1,
 	_bmd: null,
 	debugCanvas: function () {
 		// Somewhere to draw to

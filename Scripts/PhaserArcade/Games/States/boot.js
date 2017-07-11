@@ -11,6 +11,8 @@ PhaserArcade.Games.States.Boot = {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		game.input.addPointer();
 		game.input.addPointer();
+		game.input.addPointer();
+		game.input.addPointer();
 		game.state.start('load');
 	}
 };

@@ -27,31 +27,19 @@ States.GameSelect = {
 			y: game.world.height / 2
 		};
 
-        
         for(var i = 0; CacheButtons && i < CacheButtons.length; i+=1) {
             var button = CacheButtons[i](game);
 
             button.x = Center.x - (button.width + 10);
             button.y = Center.y + button.height / 2;
-        }
-        
-		var button = Utility.makeButton(game, 0, 0, 'Generic Game 1', function (button, mouse) {
-			Cache._active_play = PhaserArcade.Games.PlugGame;
-			game.state.start('title');
-		});
+		}
+		
+		this.loadingIcon.kill();
 
-		this.loadingIcon.destroy(true);
-
-		button.x = Center.x - (button.width + 10);
-		button.y = Center.y + button.height / 2;
-
-		var button = Utility.makeButton(game, 0, 0, 'Generic Game 2', function (button, mouse) {
-			Cache._active_play = PhaserArcade.Games.PlugGame;
-			game.state.start('title');
-		});
-
-		button.x = Center.x + 10;
-		button.y = Center.y + button.height / 2;
+		if (Utility._Debug) {
+			Cache._active_play = PhaserArcade.Games[Utility._DebugableGames[Utility._AutoGameIndex]];
+        	game.state.start('title');
+		}
 	}
 };
 
