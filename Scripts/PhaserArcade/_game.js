@@ -7,7 +7,7 @@ var Utility = PhaserArcade.Utility = PhaserArcade.Utility || {};
 
 //console.clear();
 
-var game = PhaserArcade._game = new Phaser.Game('100%', '100%', Phaser.AUTO);
+var game = PhaserArcade._game = new Phaser.Game('100%', '100%', Phaser.Canvas);
 
 //adding Game States
 

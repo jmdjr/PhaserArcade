@@ -8,6 +8,9 @@ var Utility = PhaserArcade.Utility = PhaserArcade.Utility || {};
 
 PhaserArcade.Games.States.Boot = {
 	create: function () {
+		Utility._Debug = true;
+		Utility._AutoGameIndex = 1;
+		
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		game.input.addPointer();
 		game.input.addPointer();

@@ -8,8 +8,8 @@ Games.Objects = Games.Objects || {};
 
 PhaserArcade.Utility = {
 	_DebugableGames:  ["PlugGame", "POT"],
-	_Debug: true,
-	_AutoGameIndex: 1,
+	_Debug: false,
+	_AutoGameIndex: 0,
 	_bmd: null,
 	debugCanvas: function () {
 		// Somewhere to draw to
