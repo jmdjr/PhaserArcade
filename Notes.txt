@@ -1,0 +1,5 @@
+first level. gen1 increase by 0.5px/s (+0.5px/s) 1.00
+cost 4
+
+next gen lvl 1 cost 
+cost 5.00

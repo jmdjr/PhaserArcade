@@ -10,15 +10,20 @@ var CacheButtons = Cache._registered_game_buttons = Cache._registered_game_butto
 
 Games.POT = function (game, configuration) {
     var gen0 = configuration.gen0;
-    var gen00Bitmap;
-    var gen01Bitmap;
+    var gen0Delay = 1 / gen0;
+    var _cycleSize = 50;
+    var _cycleLength = 10;
+    var _cycleHeigth = 10;
+    var _cyclePadding = _cycleLength / 2;
+
     var _genBitMap = [];
     var _genSpriteMap = [];
 
     var generations = [];
     var generators = [];
-
+    
     var Generation = function(previousGeneration) {
+        var _viewDexInc = 0.1;
         this.genDex = 0;
         this.hueDex = 0.0;
         this.genRate = 0.0;
@@ -26,13 +31,16 @@ Games.POT = function (game, configuration) {
         if (Utility.typeCheck(previousGeneration, "number")) {
             this.genRate = previousGeneration;
             this.count = 1;
+            this.genDex = 0;
         }
         else if (Utility.typeCheck(previousGeneration, "object")) {
-            this.hueDex = previousGeneration.hu
+            this.genDex = previousGeneration.genDex + 1;
+            this.genRate = previousGeneration.genRate / 100;
+            this.hueDex = previousGeneration.hueDex + _viewDexInc;
         }
 
         this.Color = function() {
-                var c = Phaser.Color.HSLtoRGB(hue, 1.0, 0.5);
+                var c = Phaser.Color.HSLtoRGB(this.hueDex, 1.0, 0.5);
                 return {
                     rgbString:"rgb(" + c.r + ", " + c.g + ", " + c.b + ")"
                 };
@@ -49,50 +57,72 @@ Games.POT = function (game, configuration) {
     return {
         load: function (game) { },
         create: function (game) {
-            _cycleSize = 100;
-            _cycleLength = 10;
+            var _GenGroup = game.add.group();
 
-            for(var i = 0; i < 10; i += 1) {
-                _genBitMap.push(game.make.bitmapData(_cycleSize, _cycleSize));
+            for(var i = 0; i < _cycleHeigth; i += 1) {
+                var row = [];
+                _genBitMap.push(row);
+                
+                for(var j = 0; j < _cycleLength; j += 1) {
+                    row.push(game.make.bitmapData(_cycleSize, _cycleSize));
+                }
             }
 
-            _genBitMap.forEach(function(map) {
-                map.rect(0, 0, _cycleSize, _cycleSize, "#FFFFFF");
-                map.dirty = true;
+            _genBitMap.forEach(function(collection) {
+                collection.forEach(function(map){
+                    map.rect(0, 0, _cycleSize, _cycleSize, "#FFFFFF");
+                    map.dirty = true;
+                });
             });
 
-            for(var i = 0; i < 10; i += 1) {
-                _genSpriteMap.push(game.add.sprite((i * 110) + 10, 10, _genBitMap[i]));
+            for(var i = 0; i < _cycleHeigth; i += 1) {
+                var row = [];
+                _genSpriteMap.push(row);
+
+                for(var j = 0; j < _cycleLength; j += 1) {
+                    row.push(game.add.sprite((j * (_cycleSize + _cyclePadding)) + _cyclePadding,(i * (_cycleSize + _cyclePadding)) + _cyclePadding, _genBitMap[i][j], 0, _GenGroup));
+                }
             }
+            
+            _GenGroup.x = game.world.width / 2 - _GenGroup.width / 2;
+            _GenGroup.y = game.world.height /2 - _GenGroup.height/ 2;
 
             var _x = 0;
             var _y = 0;
             var hue = 0.00;
-            var _sizeUp = 10.0;
+            var _sizeUp = _cycleSize / _cycleLength; // size increase to reduce 
             
             var _timerCycleSize = _cycleSize /_sizeUp;
-            var mapIndex = 0;
+            var mapIndexI = 0;
+            var mapIndexJ = 0;
 
-            var _tickTimer = _timer.loop(gen0, function () {
+            var _tickTimer = _timer.loop(gen0Delay, function () {
                 var x = (_x % _timerCycleSize) * _sizeUp;
                 var y = (_y % _timerCycleSize) * _sizeUp;
+                var I = (mapIndexI % _cycleHeigth);
+                var J = (mapIndexJ % _cycleLength);
+                var xFactor = 1;
+                var yFactor = 1;
+
                 var c = Phaser.Color.HSLtoRGB(hue, 1.0, 0.5);
                 var color = "rgb(" + c.r + ", " + c.g + ", " + c.b + ")";
 
-                _genBitMap[mapIndex].rect(x, y, _sizeUp, _sizeUp, color);
-                _genBitMap[mapIndex].dirty = true;
+                _genBitMap[I][J].rect(x, y, _sizeUp * xFactor, _sizeUp * yFactor, color);
+                _genBitMap[I][J].dirty = true;
 
-                _x += 1;
-                _y += Number(_x % _timerCycleSize == 0);
+                _x += xFactor;
+                _y += Number(_x % (_timerCycleSize) == 0) * yFactor;
 
                 if (_y == _timerCycleSize) {
                     _x = 0;
                     _y = 0;
+                    
                     hue += 0.1;
-                    hue = hue > 1.0 ? 0.0 : hue;
+                    hue = hue > 1.0 ? 0.1 : hue;
 
-                    _tickTimer.delay = mapIndex == 0 ? _tickTimer.delay : _tickTimer.delay * 100;
-                    mapIndex += 1;
+                    // _tickTimer.delay = (mapIndexJ % _cycleLength) == 0 ? _tickTimer.delay : _tickTimer.delay / 100;
+                    mapIndexJ += 1;
+                    mapIndexI += Number((mapIndexJ % _cycleLength) == 0);
                 }
             });
 
@@ -101,6 +131,11 @@ Games.POT = function (game, configuration) {
         update: function (game) {
 
         },
+        
+        render: function(game) {
+            game.debug.text("FrameRate: " + game.time.fps, 10, 12);
+        },
+
         shutdown: function (game) {
             gen0Bitmap.destroy();
         }
@@ -115,17 +150,19 @@ Games.POT.title = function (game) {
     Cache._active_play_config = { gen0: 200 };
     return {
         load: function (game) {
-
+            game.stage.disableVisibilityChange = true;
         },
         create: function (game) {
+            var genDelay = 2000;
             game.input.onTap.add(function (item) {
                 _totalTaps += 1;
 
                 if (_timer === null) {
                     _timer = game.time.create();
-                    _timer.add(2000, function () {
+                    _timer.add(genDelay, function () {
                         Cache._active_play_config = {
-                            gen0: (2 / _totalTaps) * 1000
+                            gen0: (_totalTaps / genDelay),
+                            gen0Bits: _totalTaps
                         }
 
                         game.state.start('play');
@@ -135,6 +172,11 @@ Games.POT.title = function (game) {
                 }
             });
         },
+        
+        render: function(game) {
+            game.debug.text("FrameRate: " + game.time.fps, 10, 12);
+        },
+
         update: function (game) { }
     };
 }
