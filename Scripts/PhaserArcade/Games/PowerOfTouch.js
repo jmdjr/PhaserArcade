@@ -53,7 +53,10 @@ Games.POT = function (game, configuration) {
     }
 
     var _timer = game.time.create();
+    var fillSquares = function() {
 
+    };
+    
     return {
         load: function (game) { },
         create: function (game) {
@@ -96,7 +99,7 @@ Games.POT = function (game, configuration) {
             var mapIndexI = 0;
             var mapIndexJ = 0;
 
-            var _tickTimer = _timer.loop(gen0Delay, function () {
+            var _tickTimer = _timer.loop(0, function () {
                 var x = (_x % _timerCycleSize) * _sizeUp;
                 var y = (_y % _timerCycleSize) * _sizeUp;
                 var I = (mapIndexI % _cycleHeigth);
